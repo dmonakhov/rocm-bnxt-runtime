@@ -42,3 +42,5 @@ jobs:
         file: Dockerfile.dbg
         push: true
         tags: ghcr.io/${{ github.repository }}:dbg-${{ env.IMAGE_TAG }}
+        build-args: |
+          BASE_IMAGE=ghcr.io/${{ github.repository }}:${{ env.IMAGE_TAG }}
