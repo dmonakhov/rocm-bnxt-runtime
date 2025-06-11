@@ -28,17 +28,10 @@ RUN apt-get update -y \
        openmpi-bin \
        libopenmpi-dev \
        libpci-dev \
+       numactl \
        pciutils \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# Install useful debug tools
-RUN apt-get update && \
-    apt-get install -y \
-        gdb \
-	python3-pytest \
-        openssh-server \
-        strace
 
 # Install rccl-test
 RUN mkdir -p $BLD \
