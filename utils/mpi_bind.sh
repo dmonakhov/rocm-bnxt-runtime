@@ -2,16 +2,23 @@
 set -eo pipefail
 
 LOCAL_RANK=$OMPI_COMM_WORLD_LOCAL_RANK
-: "${GPU_AFFINITY:? GPU_AFFINITY Variable not set or empty}"
+if [[ -z "${LOCAL_RANK}" ]]; then
+    echo "Not able to detect rank, please set OMPI_COMM_WORLD_LOCAL_RANK"
+    exit 1
+fi
+
 MEMBIND=""
 CPUBIND=""
 
-IFS=',' read -ra GPU_AFFINITY_MAP <<< "$GPU_AFFINITY"
-GPU="${GPU_AFFINITY_MAP[$LOCAL_RANK]}"
-export ROCR_VISIBLE_DEVICES="$GPU"
-export CUDA_VISIBLE_DEVICES="$GPU"
-DBG_MAPPING_STR="RANK:${LOCAL_RANK} GPU:${GPU}"
-
+# GPU mapping
+DBG_MAPPING_STR="RANK:${LOCAL_RANK}"
+if [[ -n "${GPU_AFFINITY}" ]]; then
+    IFS=',' read -ra GPU_AFFINITY_MAP <<< "$GPU_AFFINITY"
+    GPU="${GPU_AFFINITY_MAP[$LOCAL_RANK]}"
+    export ROCR_VISIBLE_DEVICES="$GPU"
+    export CUDA_VISIBLE_DEVICES="$GPU"
+    DBG_MAPPING_STR="$DBG_MAPPING_STR GPU:${GPU}"
+fi
 # NET mapping
 if [[ -n "${NET_AFFINITY}" ]]; then
     IFS=',' read -ra NET_AFFINITY_MAP <<< "$NET_AFFINITY"
@@ -39,7 +46,7 @@ fi
 if [ -n "${MEMBIND}" ] || [ -n "${CPUBIND}" ]; then
   NUMCMD="${NUMCMD:-numactl}"
 fi
-set -u
+
 
 #export NCCL_TOPO_DUMP_FILE=topo-$LOCAL_RANK.xml
 echo "MPI_BIND_DBG: $DBG_MAPPING_STR CMD:${NUMCMD} ${CPUBIND} ${MEMBIND} $@"
