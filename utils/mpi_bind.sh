@@ -30,7 +30,7 @@ if [[ -n "${MEM_AFFINITY}" ]]; then
     DBG_MAPPING_STR="$DBG_MAPPING_STR MEM:${MEM}"
 fi
 if [[ -n "${CPU_AFFINITY}" ]]; then
-    IFS=',' read -ra CPU_AFFINITY_MAP <<< "$MEM_AFFINITY"
+    IFS=',' read -ra CPU_AFFINITY_MAP <<< "$CPU_AFFINITY"
     CPU=${CPU_AFFINITY_MAP[$LOCAL_RANK]}
     CPUBIND="--physcpubind=${CPU}"
     DBG_MAPPING_STR="$DBG_MAPPING_STR CPU:${CPU}"
