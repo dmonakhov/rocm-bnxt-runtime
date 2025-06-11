@@ -18,7 +18,6 @@ RUN apt-get update -y \
       rdmacm-utils \
       infiniband-diags \
       ibverbs-utils \
-      perftest \
       ethtool \
       libibverbs-dev \
       rdma-core \
