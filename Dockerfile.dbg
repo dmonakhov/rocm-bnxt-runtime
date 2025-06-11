@@ -1,0 +1,66 @@
+################################################
+# Add debug tools to rocm-bnxt-runtime base image
+ARG BASE_IMAGE=rocm-bnxt-runtime:test
+FROM ${BASE_IMAGE}
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG BLD=/tmp/bld
+
+# Install useful debug tools
+RUN apt-get update && \
+    apt-get install -y \
+        gdb \
+	python3-pytest \
+        openssh-server \
+        strace
+
+# RCCL/Perftest deps
+RUN apt-get update -y \
+    && apt-get install -y \
+       automake \
+       autoconf \
+       libtool \
+       libibverbs-dev \
+       ibverbs-utils \
+       infiniband-diags \
+       ethtool \
+       libibumad-dev \
+       openmpi-bin \
+       libopenmpi-dev \
+       libpci-dev \
+       pciutils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install useful debug tools
+RUN apt-get update && \
+    apt-get install -y \
+        gdb \
+	python3-pytest \
+        openssh-server \
+        strace
+
+# Install rccl-test
+RUN mkdir -p $BLD \
+    && cd $BLD \
+    && git clone https://github.com/ROCm/rccl-tests \
+    && cd rccl-tests \
+    && ./install.sh --mpi --mpi_home=/usr/lib/x86_64-linux-gnu/openmpi \
+    && install -d /opt/rccl-tests \
+    && install build/*_perf /opt/rccl-tests/ \
+    && cd / \
+    rm -rf $BLD
+
+# Install perftest
+RUN mkdir -p $BLD \
+    && cd $BLD \
+    && git clone https://github.com/linux-rdma/perftest.git \
+    && cd perftest \
+    && ./autogen.sh \
+    && ./configure --prefix=/usr --enable-rocm --with-rocm=/opt/rocm \
+    && make -j \
+    && make install \
+    && cd / \
+    rm -rf $BLD
+
+COPY utils/mpi_bind.sh /usr/local/bin/mpi_bind.sh
