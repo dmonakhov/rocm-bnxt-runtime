@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=rocm/dev-ubuntu-22.04:6.4-complete
+ARG BASE_IMAGE=rocm/pytorch:rocm6.4_ubuntu22.04_py3.10_pytorch_release_2.6.0
 
 FROM ${BASE_IMAGE}
 
