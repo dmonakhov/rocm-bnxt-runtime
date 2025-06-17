@@ -50,7 +50,7 @@ RUN mkdir -p $BLD \
     && git clone https://github.com/linux-rdma/perftest.git \
     && cd perftest \
     && ./autogen.sh \
-    && ./configure --prefix=/usr --enable-rocm --with-rocm=/opt/rocm \
+    && ./configure --prefix=/usr --enable-rocm --enable-rocm-dmabuf --with-rocm=/opt/rocm \
     && make -j \
     && make install \
     && cd / \
