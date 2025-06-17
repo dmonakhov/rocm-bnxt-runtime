@@ -12,7 +12,8 @@ RUN apt-get update && \
         gdb \
 	python3-pytest \
         openssh-server \
-        strace
+        strace \
+	jq 
 
 # RCCL/Perftest deps
 RUN apt-get update -y \
