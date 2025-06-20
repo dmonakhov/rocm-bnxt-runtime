@@ -4,7 +4,7 @@ IMAGE_TAG  ?= test
 
 # Build dependencies
 BNXT_VERSION=232.0.164.5
-BASE_IMAGE=rocm/dev-ubuntu-22.04:6.4-complete
+BASE_IMAGE=rocm/dev-ubuntu-22.04:6.4.1-complete
 
 # Export options
 EXPORT_PATH ?= ..

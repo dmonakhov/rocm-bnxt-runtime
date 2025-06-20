@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=rocm/dev-ubuntu-22.04:6.4-complete
+ARG BASE_IMAGE=rocm/dev-ubuntu-22.04:6.4.1-complete
 
 FROM ${BASE_IMAGE}
 
